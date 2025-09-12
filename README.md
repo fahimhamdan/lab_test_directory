@@ -1,54 +1,52 @@
 # HKL Pathology Test Directory
 
-This is a **dynamic, searchable, and filterable test directory** for HKL Pathology Department.  
-Data is pulled directly from **Google Sheets** and displayed in a clean, responsive UI.  
+This project provides a **dynamic test directory** for HKL Pathology Lab, powered by **Google Sheets** as the backend database.  
+The webpage fetches data directly from Google Sheets and displays it in a searchable, filterable format.
 
 ---
 
-## 🚀 Features
-- Searchable table (by test name, specimen, etc.)  
-- Filter by specimen type  
-- Click on any test to view full details in a modal popup  
-- Modern turquoise–navy theme with responsive design  
-- Footer with ownership: *Designed by Fahim Hamdan*  
+## ✨ Features
+- **Dynamic data** fetched live from Google Sheets (no need to manually update HTML).
+- **Search bar + filter options**:
+  - By **Test Name** (column 1)
+  - By **Performing Lab** (column 2)
+  - By **Specimen Type** (column 4)
+- **Clean table view**: shows only *Test Name* with an **Action (View button)**.
+- **Modal popup**: when clicking **View**, it shows full test details (all columns from Google Sheet).
+- **Responsive UI** with modern styling.
+- **Footer** credit: `Designed by Fahim Hamdan`.
 
 ---
 
-## 🛠️ How to Run Locally
-1. Download the repo or clone it:  
-   ```bash
-   git clone https://github.com/<your-username>/lab-test-directory.git
-   ```  
-2. Open `index.html` in your browser (double click).  
+## 🛠 How It Works
+1. Data is stored in a **Google Sheet** (linked via sheet ID).  
+2. The HTML page fetches the sheet data using the Google Visualization API.  
+3. Data is displayed dynamically in a searchable & filterable table.  
+4. Clicking on **View** opens a modal with detailed information.
 
 ---
 
-## 🌍 Deployment (GitHub Pages)
-1. Push this repo to GitHub.  
-2. Go to **Settings → Pages**.  
-3. Under *Build and Deployment*, select:  
-   - Branch: `main`  
-   - Folder: `/ (root)`  
-4. Save → GitHub will generate a live link.  
-
-Example:  
-```
-https://<your-username>.github.io/lab-test-directory/
-```
+## 📂 File Structure
+- `index.html` → main webpage (open directly in a browser or host via GitHub Pages).
+- `README.md` → this documentation.
 
 ---
 
-## 📂 Repo Structure (Option 1 – Single File)
-```
-lab-test-directory/
-│
-├── index.html      # Main app (contains HTML, CSS & JS)
-├── README.md       # Project documentation
-```
+## 🚀 Deployment Options
+- **Local**: Just double-click `index.html` to open in a browser.  
+- **Google Sites**: Embed using `<iframe>` if needed.  
+- **GitHub Pages**: Push to a GitHub repo and enable Pages for free hosting.
 
-*(Future upgrade → can be split into assets for cleaner structure)*  
+---
+
+## 📝 Notes
+- Make sure your Google Sheet is **published to the web** and accessible for the data to load.  
+- Column mapping used in this project:  
+  - `1 = Test Name`  
+  - `2 = Performing Lab`  
+  - `4 = Specimen Type`  
 
 ---
 
 ## 👨‍💻 Credits
-**Designed by Fahim Hamdan**
+Designed by **Fahim Hamdan**

@@ -17,10 +17,7 @@
       padding: 1.5rem;
       text-align: center;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
+    header h1 { margin: 0; font-size: 1.8rem; }
     .search-container {
       display: flex;
       justify-content: center;
@@ -48,13 +45,17 @@
       text-align: left;
       border-bottom: 1px solid #ddd;
     }
-    th {
+    th { background: #007bff; color: white; }
+    tr:hover { background: #f1f1f1; }
+    button {
+      padding: 6px 12px;
       background: #007bff;
       color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
     }
-    tr:hover {
-      background: #f1f1f1;
-    }
+    button:hover { background: #0056b3; }
     footer {
       text-align: center;
       padding: 1rem;
@@ -62,6 +63,32 @@
       color: #555;
       margin-top: 20px;
       font-size: 0.9rem;
+    }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 600px;
+    }
+    .modal-content h2 { margin-top: 0; }
+    .modal-content table { width: 100%; }
+    .close-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #555;
     }
   </style>
 </head>
@@ -73,15 +100,18 @@
   <div class="search-container">
     <input type="text" id="searchInput" placeholder="Search..." onkeyup="applySearch()">
     <select id="filterOption" onchange="applySearch()">
-      <option value="Test Name">By Test Name</option>
-      <option value="Performing Lab">By Performing Lab</option>
-      <option value="Specimen Type">By Specimen Type</option>
+      <option value="1">By Test Name</option>
+      <option value="2">By Performing Lab</option>
+      <option value="4">By Specimen Type</option>
     </select>
   </div>
 
   <table id="testTable">
     <thead>
-      <tr id="tableHeader"></tr>
+      <tr>
+        <th>Test Name</th>
+        <th>Action</th>
+      </tr>
     </thead>
     <tbody id="tableBody"></tbody>
   </table>
@@ -89,6 +119,15 @@
   <footer>
     Designed by Fahim Hamdan
   </footer>
+
+  <!-- Modal -->
+  <div class="modal" id="detailModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle">Test Details</h2>
+      <table id="modalTable"></table>
+    </div>
+  </div>
 
   <script>
     const sheetId = "1nk-825z5rsdHK3MygYi6bMHlvNh79UHUY5XulTWZBKM";
@@ -104,29 +143,51 @@
         const json = JSON.parse(data.substr(47).slice(0, -2));
         headers = json.table.cols.map(col => col.label).filter(label => label);
         tableData = json.table.rows.map(row => row.c.map(cell => cell ? cell.v : ""));
-        renderTable();
+        renderTable(tableData);
       });
 
-    function renderTable() {
-      const headerRow = document.getElementById("tableHeader");
-      headerRow.innerHTML = headers.map(h => `<th>${h}</th>`).join("");
-
+    function renderTable(data) {
       const body = document.getElementById("tableBody");
-      body.innerHTML = tableData.map(row => {
-        return `<tr>${row.map(cell => `<td>${cell}</td>`).join("")}</tr>`;
-      }).join("");
+      body.innerHTML = data.map((row, i) => `
+        <tr>
+          <td>${row[1]}</td>
+          <td><button onclick="showDetails(${i})">View</button></td>
+        </tr>
+      `).join("");
     }
 
     function applySearch() {
       const input = document.getElementById("searchInput").value.toLowerCase();
-      const filter = document.getElementById("filterOption").value;
-      const colIndex = headers.indexOf(filter);
+      const colIndex = parseInt(document.getElementById("filterOption").value);
 
-      const body = document.getElementById("tableBody");
-      body.innerHTML = tableData
-        .filter(row => row[colIndex]?.toLowerCase().includes(input))
-        .map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join("")}</tr>`)
-        .join("");
+      const filtered = tableData.filter(row =>
+        row[colIndex]?.toString().toLowerCase().includes(input)
+      );
+      renderTable(filtered);
+    }
+
+    function showDetails(index) {
+      const modal = document.getElementById("detailModal");
+      const modalTable = document.getElementById("modalTable");
+      const row = tableData[index];
+
+      document.getElementById("modalTitle").innerText = row[1] || "Test Details";
+      modalTable.innerHTML = headers.map((h, i) =>
+        `<tr><th>${h}</th><td>${row[i] || ""}</td></tr>`
+      ).join("");
+
+      modal.style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("detailModal").style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById("detailModal");
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
     }
   </script>
 </body>
