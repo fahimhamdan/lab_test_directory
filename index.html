@@ -1,269 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HKL Pathology Test Directory</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background: linear-gradient(to bottom, #e6f7f9, #ffffff);
-      color: #333;
+      padding: 0;
+      background-color: #f8f9fa;
     }
     header {
-      background-color: #003366;
+      background: linear-gradient(90deg, #0056b3, #007bff);
       color: white;
+      padding: 1.5rem;
       text-align: center;
-      padding: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
     header h1 {
       margin: 0;
-      font-size: 1.8em;
+      font-size: 1.8rem;
     }
-    header p {
-      margin: 5px 0 0;
-      font-size: 0.95em;
-      color: #d9ecff;
-    }
-    main {
-      padding: 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
-    .card {
-      background: #fff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    .controls {
+    .search-container {
       display: flex;
-      flex-wrap: wrap;
+      justify-content: center;
       gap: 10px;
-      margin-bottom: 15px;
+      padding: 1rem;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .controls input[type="text"], .controls select {
-      padding: 10px 14px;
+    .search-container input,
+    .search-container select {
+      padding: 0.6rem;
       border: 1px solid #ccc;
-      border-radius: 25px;
-      font-size: 0.95em;
-      flex: 1;
-    }
-    .controls input[type="text"]:focus, .controls select:focus {
-      outline: none;
-      border-color: #17a2b8;
-      box-shadow: 0 0 5px rgba(23,162,184,0.5);
+      border-radius: 5px;
+      font-size: 1rem;
+      width: 250px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
+      margin: 1rem auto;
+      background: white;
     }
     th, td {
       padding: 12px;
-      border-bottom: 1px solid #ddd;
       text-align: left;
+      border-bottom: 1px solid #ddd;
     }
     th {
-      background-color: #003366;
-      color: #fff;
-      position: sticky;
-      top: 0;
-      z-index: 2;
+      background: #007bff;
+      color: white;
     }
     tr:hover {
-      background-color: #e6f7f9;
-    }
-    .btn {
-      background-color: #fd7e14;
-      color: #fff;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 0.9em;
-    }
-    .btn:hover {
-      background-color: #e96a00;
+      background: #f1f1f1;
     }
     footer {
-      background-color: #003366;
-      color: white;
       text-align: center;
-      padding: 12px;
-      font-size: 0.85em;
-      margin-top: 30px;
-    }
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 100;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.4);
-    }
-    .modal-content {
-      background-color: #fff;
-      margin: 10% auto;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 600px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      animation: fadeIn 0.3s;
-    }
-    .modal-header {
-      font-size: 1.2em;
-      background: #003366;
-      color: white;
-      padding: 10px;
-      border-radius: 6px 6px 0 0;
-    }
-    .close {
-      float: right;
-      font-size: 1.2em;
-      cursor: pointer;
-      color: #fff;
-    }
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-    .detail-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    .detail-table th, .detail-table td {
-      border: 1px solid #ddd;
-      padding: 8px;
-    }
-    .detail-table tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-    .detail-table th {
-      background-color: #17a2b8;
-      color: #fff;
+      padding: 1rem;
+      background: #f8f9fa;
+      color: #555;
+      margin-top: 20px;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
   <header>
     <h1>HKL Pathology Test Directory</h1>
-    <p>Searchable, Fast & Always Updated</p>
   </header>
-  <main>
-    <div class="card">
-      <div class="controls">
-        <input type="text" id="searchInput" placeholder="Search test...">
-        <select id="specimenFilter">
-          <option value="">All Specimens</option>
-        </select>
-      </div>
-      <table id="testTable">
-        <thead>
-          <tr>
-            <th>Test Name</th>
-            <th>Specimen</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </main>
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search..." onkeyup="applySearch()">
+    <select id="filterOption" onchange="applySearch()">
+      <option value="Test Name">By Test Name</option>
+      <option value="Performing Lab">By Performing Lab</option>
+      <option value="Specimen Type">By Specimen Type</option>
+    </select>
+  </div>
+
+  <table id="testTable">
+    <thead>
+      <tr id="tableHeader"></tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
   <footer>
     Designed by Fahim Hamdan
   </footer>
 
-  <div id="detailModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="close">&times;</span>
-        <span id="modalTitle">Test Details</span>
-      </div>
-      <div id="modalBody"></div>
-    </div>
-  </div>
-
   <script>
-    const sheetID = "1nk-825z5rsdHK3MygYi6bMHlvNh79UHUY5XulTWZBKM";
+    const sheetId = "1nk-825z5rsdHK3MygYi6bMHlvNh79UHUY5XulTWZBKM";
     const sheetName = "Sheet1";
-    const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+
+    let tableData = [];
+    let headers = [];
 
     fetch(url)
       .then(res => res.text())
       .then(data => {
         const json = JSON.parse(data.substr(47).slice(0, -2));
-        const rows = json.table.rows;
-        const tableBody = document.querySelector("#testTable tbody");
-        const specimenFilter = document.getElementById("specimenFilter");
-
-        let specimenSet = new Set();
-        rows.forEach(row => {
-          const testName = row.c[0]?.v || "";
-          const specimen = row.c[1]?.v || "";
-          specimenSet.add(specimen);
-
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${testName}</td>
-            <td>${specimen}</td>
-            <td><button class="btn" onclick="showDetails('${encodeURIComponent(JSON.stringify(row.c))}')">View</button></td>
-          `;
-          tableBody.appendChild(tr);
-        });
-
-        specimenSet.forEach(specimen => {
-          const opt = document.createElement("option");
-          opt.value = specimen;
-          opt.textContent = specimen;
-          specimenFilter.appendChild(opt);
-        });
-
-        document.getElementById("searchInput").addEventListener("keyup", filterTable);
-        specimenFilter.addEventListener("change", filterTable);
+        headers = json.table.cols.map(col => col.label).filter(label => label);
+        tableData = json.table.rows.map(row => row.c.map(cell => cell ? cell.v : ""));
+        renderTable();
       });
 
-    function filterTable() {
+    function renderTable() {
+      const headerRow = document.getElementById("tableHeader");
+      headerRow.innerHTML = headers.map(h => `<th>${h}</th>`).join("");
+
+      const body = document.getElementById("tableBody");
+      body.innerHTML = tableData.map(row => {
+        return `<tr>${row.map(cell => `<td>${cell}</td>`).join("")}</tr>`;
+      }).join("");
+    }
+
+    function applySearch() {
       const input = document.getElementById("searchInput").value.toLowerCase();
-      const filterSpecimen = document.getElementById("specimenFilter").value;
-      const rows = document.querySelectorAll("#testTable tbody tr");
+      const filter = document.getElementById("filterOption").value;
+      const colIndex = headers.indexOf(filter);
 
-      rows.forEach(row => {
-        const testName = row.cells[0].textContent.toLowerCase();
-        const specimen = row.cells[1].textContent;
-        const matchSearch = testName.includes(input);
-        const matchSpecimen = filterSpecimen === "" || specimen === filterSpecimen;
-        row.style.display = matchSearch && matchSpecimen ? "" : "none";
-      });
+      const body = document.getElementById("tableBody");
+      body.innerHTML = tableData
+        .filter(row => row[colIndex]?.toLowerCase().includes(input))
+        .map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join("")}</tr>`)
+        .join("");
     }
-
-    function showDetails(data) {
-      const rowData = JSON.parse(decodeURIComponent(data));
-      let html = "<table class='detail-table'>";
-      rowData.forEach((cell, i) => {
-        if (cell && cell.v) {
-          html += `<tr><th>Field ${i+1}</th><td>${cell.v}</td></tr>`;
-        }
-      });
-      html += "</table>";
-      document.getElementById("modalBody").innerHTML = html;
-      document.getElementById("detailModal").style.display = "block";
-    }
-
-    document.querySelector(".close").onclick = () => {
-      document.getElementById("detailModal").style.display = "none";
-    };
-    window.onclick = event => {
-      if (event.target == document.getElementById("detailModal")) {
-        document.getElementById("detailModal").style.display = "none";
-      }
-    };
   </script>
 </body>
 </html>
