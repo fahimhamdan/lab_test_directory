@@ -1,28 +1,61 @@
 # HKL Pathology Test Directory
 
-This is a dynamic web-based directory for pathology tests, connected to Google Sheets.
+A simple, responsive, and dynamic web-based directory for pathology tests at **Hospital Kuala Lumpur (HKL)**.  
+The test list is powered by **Google Sheets** and displayed using **DataTables** with a clean blue-white HKL theme.
 
-## Features
-- 🔍 Search tests dynamically
-- 📑 Filter by:
-  - Test Name
-  - Performing Lab
-  - Specimen Type
-- 📄 Pagination (10 / 25 / 50 / All rows per page)
-- 📱 Responsive design (works on desktop & mobile)
-- 👀 View button to open details in a modal
-- 🎨 Modal styled with blue header + white detail area
-- ⚡ Data automatically syncs from Google Sheets
+---
 
-## How it works
-1. Data is fetched from Google Sheets via JSON endpoint.
-2. DataTables.js is used to handle pagination, search, and responsive table.
-3. Clicking **View** opens a modal with full test details.
+## ✨ Features
+- **Dynamic data**: Automatically fetches test list from Google Sheets.
+- **Searchable**: Real-time search (by test name, lab, or specimen).
+- **Filterable & paginated**: Built-in DataTables filtering + pagination.
+- **Responsive design**: Works seamlessly on desktop, tablet, and mobile.
+- **View details modal**: Click `View` to see complete test details (excluding unique `No Test` key).
+- **Polished UI/UX**: Blue & white theme consistent with HKL branding.
+- **Footer branding**: Displays “Designed by Fahim Hamdan”.
 
-## Setup
-1. Host `index.html` locally or on GitHub Pages.
-2. Ensure your Google Sheet is published with **Anyone with link can view**.
-3. Replace the `sheetId` and `sheetName` in the script if using your own sheet.
+---
 
-## Credits
-Designed by Fahim Hamdan
+## 🛠️ Setup
+
+1. Clone or download this repository.
+2. Open `index.html` in your browser, OR host it using GitHub Pages / any static server.
+3. Ensure your Google Sheet is:
+   - **Published to the web**, and
+   - Accessible via **CSV/JSON link** (already configured in code).
+
+---
+
+## 📄 Google Sheet Requirements
+- First column = **No Test** (unique key, not shown in modal).
+- Other columns (e.g. Test Name, Performing Lab, Specimen Type, Turnaround Time, etc.) will automatically display in the modal.
+
+Example structure:
+
+| No Test | Test Name   | Performing Lab | Turnaround Time | Specimen Type |
+|---------|------------|----------------|-----------------|---------------|
+| 001     | Renal Test | Biochemistry   | 2 days          | Blood         |
+
+---
+
+## 🚀 Deployment
+- **Option 1**: Embed directly in Google Sites using `<iframe>` (not recommended for full layout control).
+- **Option 2**: Deploy as standalone webpage (recommended).
+  - GitHub Pages
+  - Netlify
+  - Vercel
+  - Any static hosting
+
+---
+
+## 👨‍💻 Developer Notes
+- Built with:
+  - [Bootstrap 5](https://getbootstrap.com/)
+  - [jQuery](https://jquery.com/)
+  - [DataTables](https://datatables.net/)
+- Modify `sheetID` and `sheetName` in `index.html` if your Google Sheet changes.
+
+---
+
+## 📌 Credits
+Designed by **Fahim Hamdan**  
