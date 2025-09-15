@@ -76,7 +76,8 @@
       align-items: center;
     }
     .modal-content {
-      background: white;
+      background: #007bff;
+      color: white;
       padding: 20px;
       border-radius: 8px;
       width: 80%;
@@ -86,18 +87,21 @@
     .modal-content table { width: 100%; border-collapse: collapse; }
     .modal-content th {
       text-align: left;
-      background: #f2f2f2;
+      background: rgba(255,255,255,0.2);
       padding: 6px;
       width: 40%;
+      color: white;
     }
     .modal-content td {
       padding: 6px;
+      background: rgba(255,255,255,0.1);
+      color: white;
     }
     .close-btn {
       float: right;
       cursor: pointer;
       font-size: 1.2rem;
-      color: #555;
+      color: white;
     }
   </style>
 </head>
@@ -145,6 +149,7 @@
 
     let tableData = [];
     let headers = [];
+    let currentData = [];
 
     fetch(url)
       .then(res => res.text())
@@ -156,6 +161,7 @@
       });
 
     function renderTable(data) {
+      currentData = data;
       const body = document.getElementById("tableBody");
       body.innerHTML = data.map((row, index) => `
         <tr>
@@ -176,10 +182,10 @@
     }
 
     function showDetails(index) {
+      const row = currentData[index];
       const modal = document.getElementById("detailModal");
       const modalTable = document.getElementById("modalTable");
 
-      const row = tableData[index];
       document.getElementById("modalTitle").innerText = row[1] || "Test Details";
       modalTable.innerHTML = headers.map((h, i) =>
         `<tr><th>${h}</th><td>${row[i] || ""}</td></tr>`
