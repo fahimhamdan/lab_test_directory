@@ -102,6 +102,7 @@
     <table id="testTable" class="display responsive nowrap" style="width:100%">
       <thead>
         <tr>
+          <th>No Test</th>
           <th>Test Name</th>
           <th>Action</th>
         </tr>
@@ -130,11 +131,13 @@
 
     let table;
     let dataRows = [];
+    let headers = [];
 
     fetch(url)
       .then(res => res.text())
       .then(text => {
         const json = JSON.parse(text.substr(47).slice(0, -2));
+        headers = json.table.cols.map(c => c.label);
         dataRows = json.table.rows.map(r => r.c.map(c => c ? c.v : ""));
         initTable();
       });
@@ -143,17 +146,19 @@
       table = $('#testTable').DataTable({
         data: dataRows,
         columns: [
+          { data: 0 }, // No Test
           { data: 1 }, // Test Name
           {
             data: null,
             render: function(data, type, row, meta) {
-              return `<button class="viewBtn" data-index="${meta.row}">View</button>`;
+              return `<button class="viewBtn" data-id="${row[0]}">View</button>`;
             }
           }
         ],
         responsive: true,
         pageLength: 10,
-        lengthMenu: [10, 25, 50, -1]
+        lengthMenu: [10, 25, 50, -1],
+        columnDefs: [{ targets: 0, visible: false }] // Hide No Test in table view
       });
     }
 
@@ -172,24 +177,22 @@
 
     // Modal handling
     $(document).on('click', '.viewBtn', function() {
-      const rowIndex = $(this).data('index');
-      const rowData = table.row(rowIndex).data();
-      const testName = rowData[1];
-      const row = dataRows.find(r => r[1] === testName);
+      const noTest = $(this).data('id'); // Primary key
+      const row = dataRows.find(r => r[0] == noTest);
       if (row) {
-        const headers = ["No Test", "Test Name", "Performing Lab", "Turnaround Time", "Specimen Type"];
         const detailTable = document.getElementById("detailTable");
         detailTable.innerHTML = "";
-        for (let i=0; i<headers.length; i++) {
+        headers.forEach((h, i) => {
+          if (i === 0) return; // Exclude No Test
           const tr = document.createElement("tr");
           const th = document.createElement("th");
-          th.textContent = headers[i];
+          th.textContent = h;
           const td = document.createElement("td");
           td.textContent = row[i] || "";
           tr.appendChild(th);
           tr.appendChild(td);
           detailTable.appendChild(tr);
-        }
+        });
       }
       document.getElementById("detailModal").style.display = "block";
     });
